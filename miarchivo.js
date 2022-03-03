@@ -8,7 +8,7 @@ document.body.prepend(titulo);
 
 
 const baseDeDatos = [{ id: 1,  nombre: "Campo", precio: 1000, stock:100 },
-                  {  id: 2,  nombre: "Popular", precio: 80, stock: 80 },
+                  {  id: 2,  nombre: "Popular", precio: 1500, stock: 80 },
                   {  id: 3,  nombre: "Platea"  , precio: 2000, stock: 60}];
 
 

@@ -124,9 +124,9 @@ function calcularTotal() {
     }, 0).toFixed(2);
 }
 
-function cuotas(){
+/*function cuotas(){
 
-}
+}*/
 
 
 function vaciarCarrito() {

@@ -3,146 +3,161 @@ leyenda.innerHTML = "<h3> Estos son los sectores que te podemos ofrecer</h3>";
 document.body.prepend(leyenda);
 
 let titulo = document.createElement("p");
-titulo.innerHTML = "<h1>Venta de entradas</h1>"; 
+titulo.innerHTML = "<h1>Venta de entradas</h1>";
 document.body.prepend(titulo);
 
-
-const baseDeDatos = [{ id: 1,  nombre: "Campo", precio: 1000, stock:100 },
-                  {  id: 2,  nombre: "Popular", precio: 1500, stock: 80 },
-                  {  id: 3,  nombre: "Platea"  , precio: 2000, stock: 60}];
-
-
+const baseDeDatos = [{ id: 1, nombre: "Campo", precio: 1000, stock: 100},
+{ id: 2, nombre: "Popular", precio: 80, stock: 80 },
+{ id: 3, nombre: "Platea", precio: 2000, stock: 60 }];
 
 let carrito = [];
 const divisa = '$';
-const DOMitems = document.querySelector('#items');
-const DOMcarrito = document.querySelector('#carrito');
-const DOMtotal = document.querySelector('#total');
-const DOMbotonVaciar = document.querySelector('#boton-vaciar');
-/*const DOMcuotas = documntent.querySelector('#boton-comprar');*/
+const domItems = document.querySelector('#items');
+const domCarrito = document.querySelector('#carrito');
+const domTotal = document.querySelector('#total');
+const domBotonVaciar = document.querySelector('#boton-vaciar');
+const domCuotas = document.querySelector('#boton-comprar');
+const domSelectCuotas = document.querySelector('#selectCuotas');
 
-
-function renderizarProductos() {
+function renderProductos() {
     baseDeDatos.forEach((info) => {
-        
+
         const miNodo = document.createElement('div');
-        miNodo.classList.add('card', 'col-sm-4');
-       
-        const miNodoCardBody = document.createElement('div');
-        miNodoCardBody.classList.add('card-body');
-     
-        const miNodoTitle = document.createElement('h3');
-        miNodoTitle.classList.add('card-title');
-        miNodoTitle.textContent = info.nombre;
-        
-        const miNodoPrecio = document.createElement('p');
-        miNodoPrecio.classList.add('card-text');
-        miNodoPrecio.textContent = `${info.precio}${divisa}`;
-        
-        const miNodoBoton = document.createElement('button');
-        miNodoBoton.classList.add('btn', 'btn-primary');
-        miNodoBoton.textContent = 'agregar';
-        miNodoBoton.setAttribute('marcador', info.id);
-        miNodoBoton.addEventListener('click', anyadirProductoAlCarrito);
-       
-    
-        miNodoCardBody.appendChild(miNodoTitle);
-        miNodoCardBody.appendChild(miNodoPrecio);
-        miNodoCardBody.appendChild(miNodoBoton);
-        miNodo.appendChild(miNodoCardBody);
-        DOMitems.appendChild(miNodo);
+        miNodo.classList.add('card', 'col-sm-3', 'mx-2', 'my-2');
+
+        const nodoCardBody = document.createElement('div');
+        nodoCardBody.classList.add('card-body');
+
+        const nodoTitle = document.createElement('h3');
+        nodoTitle.classList.add('card-title');
+        nodoTitle.textContent = info.nombre;
+
+        const nodoPrecio = document.createElement('p');
+        nodoPrecio.classList.add('card-text');
+        nodoPrecio.textContent = `${divisa}${info.precio}`;
+
+        const nodoBoton = document.createElement('button');
+        nodoBoton.classList.add('btn', 'btn-primary');
+        nodoBoton.textContent = 'agregar';
+        nodoBoton.setAttribute('marcador', info.id);
+        nodoBoton.addEventListener('click', addProductsCart);
+
+        nodoCardBody.appendChild(nodoTitle);
+        nodoCardBody.appendChild(nodoPrecio);
+        nodoCardBody.appendChild(nodoBoton);
+        miNodo.appendChild(nodoCardBody);
+        domItems.appendChild(miNodo);
     });
 }
 
-
-function anyadirProductoAlCarrito(evento) {
+function addProductsCart(evento) {
     carrito.push(evento.target.getAttribute('marcador'))
-    renderizarCarrito();
+    renderCarrito();
+    domBotonVaciar.disabled = false;
+    domCuotas.disabled = false;
 
 }
 
+function renderCarrito() {
 
-function renderizarCarrito() {
-    
-    DOMcarrito.textContent = '';
-    
+    if (carrito.length === 0) {
+        domCarrito.textContent = 'No hay productos en el carrito';
+
+    } else {
+        domCarrito.textContent = '';
+
+        const opcion = document.createElement('option');
+
+        //opcion.value = 1;
+        //opcion.textContent = '1 cuota de ${total / 1 }'
+
+        opcion.value = 2;
+        opcion.textContent = '3 cuota de ${total / 3 }'
+
+        opcion.value = 3;
+        opcion.textContent = '6 cuota de ${total / 6 }'
+
+        opcion.value = 4;
+        opcion.textContent = '12 cuota de ${total / 12 }'
+
+        domSelectCuotas.appendChild(opcion);
+
+    }
+
     const carritoSinDuplicados = [...new Set(carrito)];
-    
+
     carritoSinDuplicados.forEach((item) => {
-        
+
         const miItem = baseDeDatos.filter((itemBaseDatos) => {
-           
+
             return itemBaseDatos.id === parseInt(item);
         });
-       
+
         const numeroUnidadesItem = carrito.reduce((total, itemId) => {
-           
+
             return itemId === item ? total += 1 : total;
         }, 0);
-        
+
         const miNodo = document.createElement('li');
-        miNodo.classList.add('list-group-item', 'text-right', 'mx-2');
-        miNodo.textContent = `${numeroUnidadesItem} x ${miItem[0].nombre} - ${miItem[0].precio}${divisa}`;
-       
+        miNodo.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        miNodo.textContent = `${numeroUnidadesItem} x ${miItem[0].nombre} - ${divisa}${miItem[0].precio}`;
+
         const miBoton = document.createElement('button');
-        miBoton.classList.add('btn', 'btn-danger', 'mx-5');
+        miBoton.classList.add('btn', 'btn-danger',);
         miBoton.textContent = 'X';
         miBoton.style.marginLeft = '1rem';
         miBoton.dataset.item = item;
         miBoton.addEventListener('click', borrarItemCarrito);
 
-       
+
         miNodo.appendChild(miBoton);
-        DOMcarrito.appendChild(miNodo);
+        domCarrito.appendChild(miNodo);
     });
-    
-    DOMtotal.textContent = calcularTotal();
+
+    domTotal.textContent = calcularTotal();
 }
 
-
 function borrarItemCarrito(evento) {
-   
+
     const id = evento.target.dataset.item;
-  
+
     carrito = carrito.filter((carritoId) => {
         return carritoId !== id;
     });
-  
-    renderizarCarrito();
+
+    renderCarrito();
+
+    if (carrito.length === 0) {
+        domBotonVaciar.disabled = true;
+        domCuotas.disabled = true;
+    }
 }
 
-
 function calcularTotal() {
-    
+
     return carrito.reduce((total, item) => {
-      
+
         const miItem = baseDeDatos.filter((itemBaseDatos) => {
             return itemBaseDatos.id === parseInt(item);
         });
-       
+
         return total + miItem[0].precio;
     }, 0).toFixed(2);
 }
 
-/*function cuotas(){
-
-}*/
-
-
 function vaciarCarrito() {
- 
+
     carrito = [];
-  
-    renderizarCarrito();
+
+    domBotonVaciar.disabled = true;
+    domCuotas.disabled = true;
+
+    renderCarrito();
 }
 
-
-DOMbotonVaciar.addEventListener('click', vaciarCarrito);
-
-
-renderizarProductos();
-renderizarCarrito();
+domBotonVaciar.addEventListener('click', vaciarCarrito);
 
 
-
+renderProductos();
+renderCarrito();
 

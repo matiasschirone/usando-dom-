@@ -68,16 +68,13 @@ function renderCarrito() {
 
         const opcion = document.createElement('option');
 
-        //opcion.value = 1;
-        //opcion.textContent = '1 cuota de ${total / 1 }'
-
-        opcion.value = 2;
+        opcion.value = 1;
         opcion.textContent = '3 cuota de ${total / 3 }'
 
-        opcion.value = 3;
+        opcion.value = 2;
         opcion.textContent = '6 cuota de ${total / 6 }'
 
-        opcion.value = 4;
+        opcion.value = 3;
         opcion.textContent = '12 cuota de ${total / 12 }'
 
         domSelectCuotas.appendChild(opcion);
@@ -108,7 +105,6 @@ function renderCarrito() {
         miBoton.style.marginLeft = '1rem';
         miBoton.dataset.item = item;
         miBoton.addEventListener('click', borrarItemCarrito);
-
 
         miNodo.appendChild(miBoton);
         domCarrito.appendChild(miNodo);
@@ -156,7 +152,6 @@ function vaciarCarrito() {
 }
 
 domBotonVaciar.addEventListener('click', vaciarCarrito);
-
 
 renderProductos();
 renderCarrito();
